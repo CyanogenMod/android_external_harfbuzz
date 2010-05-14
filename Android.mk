@@ -25,6 +25,8 @@ include $(CLEAR_VARS)
 
 LOCAL_ARM_MODE := arm
 
+LOCAL_MODULE_TAGS := optional
+
 LOCAL_SRC_FILES:= \
         contrib/harfbuzz-freetype.c \
         contrib/harfbuzz-unicode-tables.c \
@@ -67,6 +69,8 @@ endif
 LOCAL_LDLIBS += -lpthread
 
 LOCAL_MODULE:= libharfbuzz
+
+LOCAL_PRELINK_MODULE := false
 
 include $(BUILD_SHARED_LIBRARY)
 
