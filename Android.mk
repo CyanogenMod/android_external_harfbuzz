@@ -29,7 +29,7 @@ LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES:= \
         contrib/harfbuzz-freetype.c \
-        contrib/harfbuzz-unicode-tables.c \
+        contrib/harfbuzz-unicode-icu.c \
         contrib/harfbuzz-unicode.c \
         src/harfbuzz-buffer.c \
         src/harfbuzz-stream.c \
@@ -51,6 +51,8 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_SHARED_LIBRARIES := \
         libcutils \
+        libicuuc \
+        libicui18n \
         libutils
 
 LOCAL_STATIC_LIBRARIES := \
