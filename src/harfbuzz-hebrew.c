@@ -56,8 +56,6 @@ HB_Bool HB_HebrewShape(HB_ShaperItem *shaper_item)
 
     assert(shaper_item->item.script == HB_Script_Hebrew);
 
-    HB_HeuristicSetGlyphAttributes(shaper_item);
-
 #ifndef NO_OPENTYPE
     if (HB_SelectScript(shaper_item, hebrew_features)) {
 
@@ -65,7 +63,7 @@ HB_Bool HB_HebrewShape(HB_ShaperItem *shaper_item)
         if (!HB_ConvertStringToGlyphIndices(shaper_item))
             return FALSE;
 
-
+        HB_HeuristicSetGlyphAttributes(shaper_item);
         HB_OpenTypeShape(shaper_item, /*properties*/0);
         return HB_OpenTypePosition(shaper_item, availableGlyphs, /*doLogClusters*/TRUE);
     }
@@ -86,7 +84,7 @@ HB_Bool HB_HebrewShape(HB_ShaperItem *shaper_item)
         logClusters[0] = 0;
 
         for (i = 1; i < shaper_item->item.length; ++i) {
-            hb_uint16 base = shapedChars[cluster_start];
+            hb_uint16 base = shapedChars[slen-1];
             hb_uint16 shaped = 0;
             HB_Bool invalid = FALSE;
             if (uc[i] == Dagesh) {
@@ -145,7 +143,7 @@ HB_Bool HB_HebrewShape(HB_ShaperItem *shaper_item)
             }
             if (shaped) {
                 if (shaper_item->font->klass->canRender(shaper_item->font, (HB_UChar16 *)&shaped, 1)) {
-                    shapedChars[cluster_start] = shaped;
+                    shapedChars[slen-1] = shaped;
                 } else
                     shaped = 0;
             }

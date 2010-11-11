@@ -183,18 +183,15 @@ static void calcLineBreaks(const HB_UChar16 *uc, hb_uint32 len, HB_CharAttribute
         if (ncls >= HB_LineBreak_CR)
             goto next;
 
-        // two complex chars (thai or lao), thai_attributes might override, but here we do a best guess
-	if (cls == HB_LineBreak_SA && ncls == HB_LineBreak_SA) {
-            lineBreakType = HB_Break;
-            goto next;
-        }
-
         {
             int tcls = ncls;
+            // for south east asian chars that require a complex (dictionary analysis), the unicode
+            // standard recommends to treat them as AL. thai_attributes and other attribute methods that
+            // do dictionary analysis can override
             if (tcls >= HB_LineBreak_SA)
-                tcls = HB_LineBreak_ID;
+                tcls = HB_LineBreak_AL;
             if (cls >= HB_LineBreak_SA)
-                cls = HB_LineBreak_ID;
+                cls = HB_LineBreak_AL;
 
             int brk = breakTable[cls][tcls];
             switch (brk) {
@@ -598,7 +595,7 @@ const HB_ScriptEngine HB_ScriptEngines[] = {
     // Common
     { HB_BasicShape, 0},
     // Greek
-    { HB_BasicShape, 0},
+    { HB_GreekShape, 0},
     // Cyrillic
     { HB_BasicShape, 0},
     // Armenian
@@ -986,11 +983,12 @@ HB_Face HB_NewFace(void *font, HB_GetFontTableFunc tableFunc)
     face->glyphs_substituted = false;
     face->buffer = 0;
 
-    HB_Error error;
+    HB_Error error = HB_Err_Ok;
     HB_Stream stream;
     HB_Stream gdefStream;
 
     gdefStream = getTableStream(font, tableFunc, TTAG_GDEF);
+    error = HB_Err_Not_Covered;
     if (!gdefStream || (error = HB_Load_GDEF_Table(gdefStream, &face->gdef))) {
         //DEBUG("error loading gdef table: %d", error);
         face->gdef = 0;
@@ -998,6 +996,7 @@ HB_Face HB_NewFace(void *font, HB_GetFontTableFunc tableFunc)
 
     //DEBUG() << "trying to load gsub table";
     stream = getTableStream(font, tableFunc, TTAG_GSUB);
+    error = HB_Err_Not_Covered;
     if (!stream || (error = HB_Load_GSUB_Table(stream, &face->gsub, face->gdef, gdefStream))) {
         face->gsub = 0;
         if (error != HB_Err_Not_Covered) {
@@ -1009,6 +1008,7 @@ HB_Face HB_NewFace(void *font, HB_GetFontTableFunc tableFunc)
     _hb_close_stream(stream);
 
     stream = getTableStream(font, tableFunc, TTAG_GPOS);
+    error = HB_Err_Not_Covered;
     if (!stream || (error = HB_Load_GPOS_Table(stream, &face->gpos, face->gdef, gdefStream))) {
         face->gpos = 0;
         DEBUG("error loading gpos table: %d", error);
@@ -1201,24 +1201,6 @@ HB_Bool HB_OpenTypeShape(HB_ShaperItem *item, const hb_uint32 *properties)
     return true;
 }
 
-/* See comments near the definition of HB_ShaperFlag_ForceMarksToZeroWidth for a description
-   of why this function exists. */
-void HB_FixupZeroWidth(HB_ShaperItem *item)
-{
-    HB_UShort property;
-
-    if (!item->face->gdef)
-        return;
-
-    for (unsigned int i = 0; i < item->num_glyphs; ++i) {
-        /* If the glyph is a mark, force its advance to zero. */
-        if (HB_GDEF_Get_Glyph_Property (item->face->gdef, item->glyphs[i], &property) == HB_Err_Ok &&
-            property == HB_GDEF_MARK) {
-            item->advances[i] = 0;
-        }
-    }
-}
-
 HB_Bool HB_OpenTypePosition(HB_ShaperItem *item, int availableGlyphs, HB_Bool doLogClusters)
 {
     HB_Face face = item->face;
@@ -1233,8 +1215,6 @@ HB_Bool HB_OpenTypePosition(HB_ShaperItem *item, int availableGlyphs, HB_Bool do
 
     if (!face->glyphs_substituted && !glyphs_positioned) {
         HB_GetGlyphAdvances(item);
-        if (item->face->current_flags & HB_ShaperFlag_ForceMarksToZeroWidth)
-            HB_FixupZeroWidth(item);
         return true; // nothing to do for us
     }
 

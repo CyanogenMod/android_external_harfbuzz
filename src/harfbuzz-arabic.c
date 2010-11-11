@@ -1107,7 +1107,6 @@ HB_Bool HB_ArabicShape(HB_ShaperItem *item)
     assert(item->item.script == HB_Script_Arabic || item->item.script == HB_Script_Syriac
            || item->item.script == HB_Script_Nko);
 
-    item->shaperFlags |= HB_ShaperFlag_ForceMarksToZeroWidth;
 #ifndef NO_OPENTYPE
 
     if (HB_SelectScript(item, item->item.script == HB_Script_Arabic ? arabic_features : syriac_features)) {
