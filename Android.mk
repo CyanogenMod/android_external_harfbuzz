@@ -73,7 +73,7 @@ LOCAL_LDLIBS += -lpthread
 
 LOCAL_MODULE:= libharfbuzz
 
-LOCAL_PRELINK_MODULE := false
+
 
 include $(BUILD_SHARED_LIBRARY)
 
