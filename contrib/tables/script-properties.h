@@ -32,15 +32,25 @@ static const struct script_property script_properties[] = {
   {0x591, 0x5c7, HB_Script_Hebrew},
   {0x5d0, 0x5ea, HB_Script_Hebrew},
   {0x5f0, 0x5f4, HB_Script_Hebrew},
-  {0x606, 0x60b, HB_Script_Arabic},
-  {0x60d, 0x61a, HB_Script_Arabic},
-  {0x61e, 0x61e, HB_Script_Arabic},
-  {0x621, 0x63f, HB_Script_Arabic},
-  {0x641, 0x64a, HB_Script_Arabic},
-  {0x64b, 0x655, HB_Script_Inherited},
-  {0x656, 0x65e, HB_Script_Arabic},
+  /* BEGIN android-changed
+     Some Arabic glyphs were just detected as HB_Script_Common when trying to get the script
+     from their Unicode Point.
+     The most relevant case is concerning the Android IME / Keyboard for Arabic as he is trying
+     to shape diacritical marks (as single code point) for showing them on Keys.
+     Also, putting uni0640, uni064B-uni0655 and uni0670 as Arabic can break Syriac script
+  */
+  {0x600, 0x603, HB_Script_Arabic},
+  {0x606, 0x60f, HB_Script_Arabic},
+  {0x610, 0x61b, HB_Script_Arabic},
+  {0x61e, 0x61f, HB_Script_Arabic},
+  {0x620, 0x63f, HB_Script_Arabic},
+  {0x640, 0x64a, HB_Script_Arabic},
+  {0x64b, 0x655, HB_Script_Arabic}, // was: HB_Script_Inherited
+  {0x656, 0x65f, HB_Script_Arabic},
+  {0x660, 0x669, HB_Script_Arabic},
   {0x66a, 0x66f, HB_Script_Arabic},
-  {0x670, 0x670, HB_Script_Inherited},
+  {0x670, 0x670, HB_Script_Arabic}, // was: HB_Script_Inherited
+  /* END android-changed */
   {0x671, 0x6dc, HB_Script_Arabic},
   {0x6de, 0x6ff, HB_Script_Arabic},
   {0x700, 0x70d, HB_Script_Syriac},
