@@ -37,7 +37,10 @@ static HB_Bool isLetter(HB_UChar16 ucs)
                      FLAG(HB_Letter_Titlecase) |
                      FLAG(HB_Letter_Modifier) |
                      FLAG(HB_Letter_Other);
-    return FLAG(HB_GetUnicodeCharCategory(ucs)) & test;
+    // BEGIN android-changed
+    // Check the value is zero or not instead of casting int to HB_Bool(unsigned char).
+    return (FLAG(HB_GetUnicodeCharCategory(ucs)) & test) != 0;
+    // END android-changed
 }
 
 static HB_Bool isMark(HB_UChar16 ucs)
@@ -45,7 +48,10 @@ static HB_Bool isMark(HB_UChar16 ucs)
     const int test = FLAG(HB_Mark_NonSpacing) |
                      FLAG(HB_Mark_SpacingCombining) |
                      FLAG(HB_Mark_Enclosing);
-    return FLAG(HB_GetUnicodeCharCategory(ucs)) & test;
+    // BEGIN android-changed
+    // Check the value is zero or not instead of casting int to HB_Bool(unsigned char).
+    return (FLAG(HB_GetUnicodeCharCategory(ucs)) & test) != 0;
+    // END android-changed
 }
 
 enum Form {
