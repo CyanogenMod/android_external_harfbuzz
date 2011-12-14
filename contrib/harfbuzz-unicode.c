@@ -167,9 +167,6 @@ hb_utf16_script_run_prev(unsigned *num_code_points, HB_ScriptItem *output,
     const HB_Script script = code_point_to_script(cp);
 
     if (script != current_script) {
-        /* BEGIN android-changed
-           The condition was not correct by doing "a == b == constant"
-           END android-changed */
       if (current_script == HB_Script_Inherited && init_script == HB_Script_Inherited) {
         // If we started off as inherited, we take whatever we can find.
         output->script = script;
