@@ -24,7 +24,9 @@
 
 #include "harfbuzz-shaper.h"
 #include "harfbuzz-shaper-private.h"
-
+extern "C" {
+#include "harfbuzz-debug.h"
+}
 #include "harfbuzz-stream-private.h"
 #include <assert.h>
 #include <stdio.h>
@@ -818,7 +820,7 @@ static void dump_string(HB_Buffer buffer)
 }
 #define DEBUG printf
 #else
-#define DEBUG if (1) ; else printf
+#define DEBUG HBDebug
 #endif
 
 #define DefaultLangSys 0xffff
@@ -1310,6 +1312,7 @@ HB_Bool HB_OpenTypePosition(HB_ShaperItem *item, int availableGlyphs, HB_Bool do
             }
 //             DEBUG("   ->\tadv=%d\tpos=(%d/%d)",
 //                    glyphs[i].advance.x.toInt(), glyphs[i].offset.x.toInt(), glyphs[i].offset.y.toInt());
+             DEBUG("Glyph offset[%d] x:%d, y: %d)", i, offsets[i].x, offsets[i].y);
         }
         item->kerning_applied = face->has_opentype_kerning;
     } else {

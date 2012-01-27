@@ -20,7 +20,8 @@ MAINSOURCES =  \
 	harfbuzz-arabic.c \
 	harfbuzz-hangul.c \
 	harfbuzz-myanmar.c \
-	harfbuzz-thai.c
+	harfbuzz-thai.c \
+	harfbuzz-debug.c
 
 EXTRA_SOURCES = harfbuzz.c
 
@@ -35,7 +36,8 @@ PUBLICHEADERS = \
 	harfbuzz-global.h \
 	harfbuzz-external.h \
 	harfbuzz-shaper.h \
-	harfbuzz-stream.h
+	harfbuzz-stream.h \
+	harfbuzz-debug.h
 
 PRIVATEHEADERS = \
 	harfbuzz-impl.h \

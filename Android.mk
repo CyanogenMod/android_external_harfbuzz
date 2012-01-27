@@ -48,7 +48,8 @@ LOCAL_SRC_FILES:= \
         src/harfbuzz-hangul.c \
         src/harfbuzz-myanmar.c \
         src/harfbuzz-thai.c \
-        src/harfbuzz-greek.c
+        src/harfbuzz-greek.c \
+        src/harfbuzz-debug.c
 
 LOCAL_SHARED_LIBRARIES := \
         libcutils \
