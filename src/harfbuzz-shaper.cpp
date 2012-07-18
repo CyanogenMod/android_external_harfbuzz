@@ -1082,8 +1082,11 @@ HB_Bool HB_SelectScript(HB_ShaperItem *shaper_item, const HB_OpenTypeFeature *fe
         HB_GSUB_Clear_Features(face->gsub);
         HB_UShort script_index;
         HB_Error error = HB_GSUB_Select_Script(face->gsub, tag, &script_index);
+        if (error == HB_Err_Not_Covered) {
+            error = HB_GSUB_Select_Script(face->gsub, DefaultScript, &script_index);
+        }
         if (!error) {
-            DEBUG("script %s has script index %d", tag_to_string(script), script_index);
+            DEBUG("script %s has script index %d", tag_to_string(tag), script_index);
             while (features->tag) {
                 HB_UShort feature_index;
                 error = HB_GSUB_Select_Feature(face->gsub, features->tag, script_index, 0xffff, &feature_index);
@@ -1103,6 +1106,9 @@ HB_Bool HB_SelectScript(HB_ShaperItem *shaper_item, const HB_OpenTypeFeature *fe
         HB_GPOS_Clear_Features(face->gpos);
         HB_UShort script_index;
         HB_Error error = HB_GPOS_Select_Script(face->gpos, tag, &script_index);
+        if (error == HB_Err_Not_Covered) {
+            error = HB_GPOS_Select_Script(face->gpos, DefaultScript, &script_index);
+        }
         if (!error) {
 #ifdef OT_DEBUG
             {
