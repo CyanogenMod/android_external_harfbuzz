@@ -78,13 +78,6 @@ script_property_cmp(const void *vkey, const void *vcandidate) {
 
 HB_Script
 code_point_to_script(uint32_t cp) {
- /* BEGIN android-changed
-    For the purpose of aggregating script runs together, we treat space
-    as belonging to the same script as surrounding characters. This is a
-    performance optimization to keep the number of runs down. */
-  if (cp == ' ') return HB_Script_Inherited;
-  /* END android-changed */
-
   const void *vprop = bsearch((void *) (intptr_t) cp, script_properties,
                               script_properties_count,
                               sizeof(struct script_property),
