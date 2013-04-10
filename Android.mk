@@ -55,7 +55,8 @@ LOCAL_SHARED_LIBRARIES := \
         libcutils \
         libicuuc \
         libicui18n \
-        libutils
+        libutils \
+        liblog
 
 LOCAL_STATIC_LIBRARIES := \
         libft2
@@ -77,4 +78,3 @@ LOCAL_MODULE:= libharfbuzz
 
 
 include $(BUILD_SHARED_LIBRARY)
-
