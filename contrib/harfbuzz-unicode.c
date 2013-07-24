@@ -78,6 +78,10 @@ script_property_cmp(const void *vkey, const void *vcandidate) {
 
 HB_Script
 code_point_to_script(uint32_t cp) {
+  if (cp == 0) {
+    // bsearch can throw an assertion on null pointer, so skip if zero
+    return HB_Script_Common;
+  }
   const void *vprop = bsearch((void *) (intptr_t) cp, script_properties,
                               script_properties_count,
                               sizeof(struct script_property),
