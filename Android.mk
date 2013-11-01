@@ -53,13 +53,13 @@ LOCAL_SRC_FILES:= \
 
 LOCAL_SHARED_LIBRARIES := \
         libcutils \
+        libft2 \
         libicuuc \
         libicui18n \
+        libpng \
         libutils \
-        liblog
-
-LOCAL_STATIC_LIBRARIES := \
-        libft2
+        liblog \
+        libz
 
 LOCAL_C_INCLUDES += \
         $(LOCAL_PATH)/src \
